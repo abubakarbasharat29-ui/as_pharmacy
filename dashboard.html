@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - AS Pharmacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-wrapper">
+            <main class="content-area">
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon emerald"><i class="fa-solid fa-capsules"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Medicines</span>
+                            <span class="stat-value" id="statMeds">—</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon blue"><i class="fa-solid fa-cart-shopping"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Total Sales</span>
+                            <span class="stat-value" id="statSales">—</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon amber"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Low Stock Items</span>
+                            <span class="stat-value" id="statLowStock">—</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon rose"><i class="fa-solid fa-money-bill-trend-up"></i></div>
+                        <div class="stat-info">
+                            <span class="stat-label">Today's Revenue</span>
+                            <span class="stat-value" id="statRevenue">—</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="grid-chart card">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <div>
+                                <h3 style="font-size: 1.15rem;">Sales Performance</h3>
+                                <p style="font-size: 0.85rem; color: var(--text-muted);">Weekly analysis of pharmacy revenue</p>
+                            </div>
+                            <select id="chartPeriod" class="form-control" style="width: auto; padding: 0.4rem 0.8rem; padding-left: 0.8rem; font-size: 0.75rem;" onchange="updateChart()">
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                            </select>
+                        </div>
+                        <div style="height: 300px;">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="grid-alerts" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <div class="card" style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; border: none;">
+                            <h3 style="font-size: 1.1rem; margin-bottom: 1.5rem; color: white;">Quick Actions</h3>
+                            <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                                <a href="billing.html" class="btn btn-primary" style="background: var(--accent); border: none;">
+                                    <i class="fa-solid fa-file-invoice-dollar"></i> New Bill
+                                </a>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                                    <a href="inventory.html" class="btn btn-outline" style="border-color: rgba(255,255,255,0.1); color: white; background: rgba(255,255,255,0.05); font-size: 0.8rem; padding: 0.6rem;">
+                                        <i class="fa-solid fa-plus"></i> Stock
+                                    </a>
+                                    <a href="reports.html" class="btn btn-outline" style="border-color: rgba(255,255,255,0.1); color: white; background: rgba(255,255,255,0.05); font-size: 0.8rem; padding: 0.6rem;">
+                                        <i class="fa-solid fa-chart-pie"></i> Stats
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem;">
+                                <div style="width: 8px; height: 8px; background: var(--danger); border-radius: 50%;"></div>
+                                <h3 style="font-size: 1.1rem;">Critical Alerts</h3>
+                            </div>
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <div id="lowStockList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                                <div id="expiryAlertList" style="display: flex; flex-direction: column; gap: 0.75rem;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid-recent card" style="padding: 0; overflow: hidden;">
+                        <div style="padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+                            <h3 style="font-size: 1.1rem;">Recent Transactions</h3>
+                            <a href="sales.html" class="auth-link" style="font-size: 0.85rem;">View All Sales</a>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Invoice</th><th>Customer</th><th>Amount</th><th>Time</th><th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentSalesBody">
+                                    <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-light);">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script>
+        let salesChart = null;
+        let _meds = [], _sales = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await Components.renderSidebar('dashboard');
+            await Components.renderTopbar('Dashboard Overview');
+            [_meds, _sales] = await Promise.all([Storage.fetch(DB.MEDS), Storage.fetch(DB.SALES)]);
+            renderDashboardStats();
+            updateChart();
+        });
+
+        function renderDashboardStats() {
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            const threeMonths = new Date(); threeMonths.setMonth(today.getMonth() + 3);
+
+            document.getElementById('statMeds').innerText = _meds.length;
+            document.getElementById('statSales').innerText = _sales.length;
+
+            const lowStock = _meds.filter(m => m.qty < 10);
+            document.getElementById('statLowStock').innerText = lowStock.length;
+
+            const todaySales = _sales.filter(s => (s.date || s.sale_date) === todayStr);
+            const revenue = todaySales.reduce((a, s) => a + (s.total || 0), 0);
+            document.getElementById('statRevenue').innerText = `Rs. ${revenue.toLocaleString()}`;
+
+            // Recent sales
+            const body = document.getElementById('recentSalesBody');
+            const recent = _sales.slice(0, 6);
+            body.innerHTML = recent.length === 0
+                ? '<tr><td colspan="5" style="text-align:center;color:var(--text-light);padding:2rem;">No recent sales</td></tr>'
+                : recent.map(s => `
+                    <tr>
+                        <td style="font-weight:600;">${s.id}</td>
+                        <td>${s.customer}</td>
+                        <td style="font-weight:700;color:var(--accent);">Rs. ${(s.total||0).toLocaleString()}</td>
+                        <td style="font-size:0.85rem;color:var(--text-muted);">${s.sale_time || s.time || ''}</td>
+                        <td><span class="badge badge-success">Paid</span></td>
+                    </tr>`).join('');
+
+            // Low stock
+            const lowList = document.getElementById('lowStockList');
+            lowList.innerHTML = lowStock.length === 0
+                ? '<p style="font-size:0.85rem;color:var(--text-muted);">All items in stock.</p>'
+                : lowStock.slice(0, 3).map(m => `
+                    <div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1rem;background:var(--surface-alt);border-radius:var(--radius-md);">
+                        <div><span style="font-size:0.85rem;font-weight:600;display:block;">${m.name}</span><span style="font-size:0.75rem;color:var(--text-muted);">${m.company}</span></div>
+                        <span class="badge badge-danger" style="background:rgba(239,68,68,0.1);color:var(--danger);">${m.qty} left</span>
+                    </div>`).join('');
+
+            // Expiry
+            const expiring = _meds.filter(m => { const e = new Date(m.expiry); return e <= threeMonths && e >= today; });
+            const expList = document.getElementById('expiryAlertList');
+            expList.innerHTML = expiring.length === 0
+                ? '<p style="font-size:0.85rem;color:var(--text-muted);">No items expiring soon.</p>'
+                : expiring.slice(0, 3).map(m => {
+                    const days = Math.ceil(Math.abs(new Date(m.expiry) - today) / 86400000);
+                    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:0.75rem 1rem;background:var(--surface-alt);border-radius:var(--radius-md);">
+                        <div><span style="font-size:0.85rem;font-weight:600;display:block;">${m.name}</span><span style="font-size:0.75rem;color:var(--text-muted);">Exp: ${m.expiry}</span></div>
+                        <span class="badge badge-warning" style="background:rgba(245,158,11,0.1);color:var(--warning);">${days} days</span>
+                    </div>`;
+                }).join('');
+        }
+
+        function updateChart() { renderSalesChart(parseInt(document.getElementById('chartPeriod').value)); }
+
+        function renderSalesChart(days) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const labels = [], data = [];
+            for (let i = days - 1; i >= 0; i--) {
+                const d = new Date(); d.setDate(d.getDate() - i);
+                const ds = d.toISOString().split('T')[0];
+                labels.push(d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+                data.push(_sales.filter(s => (s.date || s.sale_date) === ds).reduce((sum, s) => sum + (s.total || 0), 0));
+            }
+            if (salesChart) salesChart.destroy();
+            salesChart = new Chart(ctx, {
+                type: 'line',
+                data: { labels, datasets: [{ label: 'Revenue', data, borderColor: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', tension: 0.4, fill: true, borderWidth: 3, pointBackgroundColor: '#10b981', pointRadius: 4 }] },
+                options: {
+                    responsive: true, maintainAspectRatio: false,
+                    plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0f172a', padding: 12, cornerRadius: 8, callbacks: { label: c => 'Revenue: Rs. ' + c.parsed.y.toLocaleString() } } },
+                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => 'Rs. ' + v.toLocaleString() } }, x: { grid: { display: false } } }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

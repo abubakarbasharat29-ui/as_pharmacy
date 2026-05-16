@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - AS Pharmacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <div class="main-wrapper">
+            <main class="content-area">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                    <div>
+                        <h2 style="font-size:1.5rem;">Admin Panel</h2>
+                        <p style="color:var(--text-muted);font-size:0.95rem;">Manage system users and global settings</p>
+                    </div>
+                </div>
+
+                <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+                    <!-- User Management -->
+                    <div class="card" style="padding:0;overflow:hidden;">
+                        <div style="padding:1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+                            <h3 style="font-size:1.1rem;">System Users</h3>
+                            <button class="btn btn-outline" style="padding:0.5rem 1rem;font-size:0.85rem;" onclick="openUserModal()">
+                                <i class="fa-solid fa-user-plus"></i> Add User
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr><th>Name</th><th>Email</th><th>Role</th><th>Joined Date</th><th>Actions</th></tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    <tr><td colspan="5" style="text-align:center;padding:2rem;color:var(--text-light);">Loading...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- System Info + Settings -->
+                    <div style="display:flex;flex-direction:column;gap:1.5rem;">
+                        <div class="card">
+                            <h3 style="margin-bottom:1.5rem;">System Information</h3>
+                            <div style="display:flex;flex-direction:column;gap:1rem;">
+                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
+                                    <span style="color:var(--text-muted);">Version</span><span style="font-weight:600;">v2.1.0-Pro</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
+                                    <span style="color:var(--text-muted);">Database</span><span style="font-weight:600;">MySQL (XAMPP)</span>
+                                </div>
+                                <div style="display:flex;justify-content:space-between;font-size:0.9rem;">
+                                    <span style="color:var(--text-muted);">Backend</span><span style="font-weight:600;">PHP 8+</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 style="margin-bottom:1.5rem;">Global Settings</h3>
+                            <div class="form-group">
+                                <label class="form-label">Pharmacy Name</label>
+                                <input type="text" id="settingName" class="form-control" value="AS Pharmacy" style="padding-left:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Currency Symbol</label>
+                                <input type="text" id="settingCurrency" class="form-control" value="Rs." style="padding-left:1rem;">
+                            </div>
+                            <button class="btn btn-primary" style="width:100%;margin-top:0.5rem;" onclick="saveSettings()">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:2rem;">
+        <div class="card" style="width:100%;max-width:450px;box-shadow:var(--shadow-lg);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                <h3>Add New User</h3>
+                <button onclick="closeUserModal()" style="background:none;border:none;cursor:pointer;color:var(--text-muted);"><i class="fa-solid fa-xmark fa-xl"></i></button>
+            </div>
+            <form id="userForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" id="userName" class="form-control" style="padding-left:1rem;" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" id="userEmail" class="form-control" style="padding-left:1rem;" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <select id="userRole" class="form-control" style="padding-left:1rem;">
+                        <option value="staff">Staff</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="userPass" class="form-control" style="padding-left:1rem;" required>
+                </div>
+                <div style="display:flex;gap:1rem;margin-top:2rem;">
+                    <button type="button" class="btn btn-outline" style="flex:1;" onclick="closeUserModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1;" id="userSaveBtn">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script>
+        let _users = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await Storage.init();
+            const user = Storage.getCurrentUser();
+            if (!user) { window.location.href = 'admin-login.html'; return; }
+            if (user.role !== 'admin') { window.location.href = 'dashboard.html'; return; }
+
+            await Components.renderSidebar('admin');
+            await Components.renderTopbar('Admin Panel');
+            await renderUsers();
+            await loadSettings();
+        });
+
+        async function renderUsers() {
+            _users = await Storage.fetch(DB.USERS);
+            const tbody = document.getElementById('usersTableBody');
+            tbody.innerHTML = _users.map(u => `
+                <tr>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:0.75rem;">
+                            <div class="user-avatar" style="width:32px;height:32px;font-size:0.75rem;">${u.name.charAt(0)}</div>
+                            <strong>${u.name}</strong>
+                        </div>
+                    </td>
+                    <td>${u.email}</td>
+                    <td><span class="badge ${u.role === 'admin' ? 'badge-success' : 'badge-warning'}">${u.role.toUpperCase()}</span></td>
+                    <td>${u.joined || '—'}</td>
+                    <td>
+                        <button class="action-btn" onclick="deleteUser(${u.id})" title="Remove User" style="color:var(--danger);">
+                            <i class="fa-solid fa-user-minus"></i>
+                        </button>
+                    </td>
+                </tr>`).join('');
+        }
+
+        async function loadSettings() {
+            const s = await _api('settings.php');
+            if (s.pharmacy_name) document.getElementById('settingName').value     = s.pharmacy_name;
+            if (s.currency)      document.getElementById('settingCurrency').value = s.currency;
+        }
+
+        async function saveSettings() {
+            await _api('settings.php', 'POST', {
+                pharmacy_name: document.getElementById('settingName').value,
+                currency:      document.getElementById('settingCurrency').value
+            });
+            alert('Settings saved!');
+        }
+
+        function openUserModal()  { document.getElementById('userModal').style.display = 'flex'; }
+        function closeUserModal() { document.getElementById('userModal').style.display = 'none'; }
+
+        document.getElementById('userForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('userSaveBtn');
+            btn.disabled = true; btn.innerText = 'Creating...';
+
+            await Storage.add(DB.USERS, {
+                name:     document.getElementById('userName').value,
+                email:    document.getElementById('userEmail').value,
+                role:     document.getElementById('userRole').value,
+                password: document.getElementById('userPass').value,
+            });
+
+            closeUserModal();
+            await renderUsers();
+            btn.disabled = false; btn.innerText = 'Create User';
+            document.getElementById('userForm').reset();
+        });
+
+        async function deleteUser(id) {
+            const current = Storage.getCurrentUser();
+            if (id === current.id) { alert('You cannot delete your own account.'); return; }
+            if (confirm('Remove this user? Their attendance history will also be deleted.')) {
+                await Storage.delete(DB.USERS, id);
+                await renderUsers();
+            }
+        }
+    </script>
+</body>
+</html>

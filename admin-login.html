@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - AS Pharmacy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="auth-page">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="auth-logo-icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+                <div class="auth-logo-text">AS Pharmacy</div>
+            </div>
+            <div class="auth-header">
+                <h2 class="auth-title">Admin Access</h2>
+                <p class="auth-subtitle">Restricted to authorized personnel only</p>
+            </div>
+            <form id="loginForm">
+                <div id="loginError" style="color: var(--danger); font-size: 0.85rem; margin-bottom: 1rem; display: none; text-align: center;">
+                    <i class="fa-solid fa-circle-exclamation"></i> <span></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Admin Email</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-envelope input-icon"></i>
+                        <input type="email" id="email" class="form-control" placeholder="admin@aspharmacy.com" required>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label">Password</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+                        <button type="button" class="input-toggle" onclick="togglePassword()">
+                            <i class="fa-solid fa-eye" id="passwordIcon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <span>Admin Login</span>
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                </button>
+            </form>
+            <div style="margin-top: 1.5rem; text-align: center;">
+                <a href="login.html" class="auth-link" style="font-size: 0.85rem; color: var(--text-muted);">
+                    <i class="fa-solid fa-arrow-left"></i> Return to Staff Login
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script>
+        (async () => {
+            await Storage.init();
+            const user = Storage.getCurrentUser();
+            if (user) window.location.href = user.role === 'admin' ? 'admin.html' : 'dashboard.html';
+        })();
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
+
+            const result = await Storage.login(
+                document.getElementById('email').value,
+                document.getElementById('password').value
+            );
+
+            if (result.success) {
+                if (result.user.role !== 'admin') {
+                    await Storage.logout();
+                    showError('Access denied. Administrator privileges required.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Admin Login</span><i class="fa-solid fa-right-to-bracket"></i>';
+                } else {
+                    window.location.href = 'admin.html';
+                }
+            } else {
+                showError(result.message || 'Invalid credentials');
+                btn.disabled = false;
+                btn.innerHTML = '<span>Admin Login</span><i class="fa-solid fa-right-to-bracket"></i>';
+            }
+        });
+
+        function showError(msg) {
+            const err = document.getElementById('loginError');
+            err.style.display = 'block';
+            err.querySelector('span').innerText = msg;
+        }
+
+        function togglePassword() {
+            const input = document.getElementById('password');
+            const icon  = document.getElementById('passwordIcon');
+            input.type  = input.type === 'password' ? 'text' : 'password';
+            icon.className = input.type === 'password' ? 'fa-solid fa-eye' : 'fa-solid fa-eye-slash';
+        }
+    </script>
+</body>
+</html>
