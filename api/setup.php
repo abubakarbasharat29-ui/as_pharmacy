@@ -2,26 +2,23 @@
 /**
  * AS Pharmacy - Database Installer
  * Run this ONCE to create all tables and seed data
- * URL: http://localhost/as_pharmacy/api/setup.php
+ * URL: https://aspharmacy-production.up.railway.app/api/setup.php
  */
 
 header('Content-Type: text/html; charset=utf-8');
 
-$host = 'localhost';
+$host = 'maglev.proxy.rlwy.net';
 $user = 'root';
-$pass = '';
+$pass = 'hNZKGzThVGeWEQvVsgeEZFfchYBosbdu';
+$port = '27912';
+$dbname = 'railway';
 
 try {
-    // Connect WITHOUT selecting database first
-    $pdo = new PDO("mysql:host=$host;charset=utf8", $user, $pass, [
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname;charset=utf8", $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
 
-    // Create database
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `as_pharmacy` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-    $pdo->exec("USE `as_pharmacy`");
-
-    // ── USERS TABLE ──────────────────────────────────────────────────────────
+    // ── USERS TABLE
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `users` (
             `id`       INT AUTO_INCREMENT PRIMARY KEY,
@@ -36,7 +33,7 @@ try {
         ) ENGINE=InnoDB
     ");
 
-    // ── MEDICINES TABLE ──────────────────────────────────────────────────────
+    // ── MEDICINES TABLE
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `medicines` (
             `id`       INT AUTO_INCREMENT PRIMARY KEY,
@@ -51,7 +48,7 @@ try {
         ) ENGINE=InnoDB
     ");
 
-    // ── SALES TABLE ──────────────────────────────────────────────────────────
+    // ── SALES TABLE
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `sales` (
             `id`        VARCHAR(20) PRIMARY KEY,
@@ -66,7 +63,7 @@ try {
         ) ENGINE=InnoDB
     ");
 
-    // ── ATTENDANCE TABLE ─────────────────────────────────────────────────────
+    // ── ATTENDANCE TABLE
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `attendance` (
             `id`        INT AUTO_INCREMENT PRIMARY KEY,
@@ -81,7 +78,7 @@ try {
         ) ENGINE=InnoDB
     ");
 
-    // ── SETTINGS TABLE ───────────────────────────────────────────────────────
+    // ── SETTINGS TABLE
     $pdo->exec("
         CREATE TABLE IF NOT EXISTS `settings` (
             `key_name`  VARCHAR(50) PRIMARY KEY,
@@ -89,7 +86,7 @@ try {
         ) ENGINE=InnoDB
     ");
 
-    // ── SEED DEFAULT ADMIN ───────────────────────────────────────────────────
+    // ── SEED DEFAULT ADMIN
     $adminExists = $pdo->query("SELECT COUNT(*) FROM users WHERE email='admin@aspharmacy.com'")->fetchColumn();
     if (!$adminExists) {
         $pdo->exec("
@@ -99,7 +96,7 @@ try {
         ");
     }
 
-    // ── SEED SAMPLE MEDICINES ────────────────────────────────────────────────
+    // ── SEED SAMPLE MEDICINES
     $medsExist = $pdo->query("SELECT COUNT(*) FROM medicines")->fetchColumn();
     if (!$medsExist) {
         $pdo->exec("
@@ -112,7 +109,7 @@ try {
         ");
     }
 
-    // ── SEED DEFAULT SETTINGS ────────────────────────────────────────────────
+    // ── SEED DEFAULT SETTINGS
     $pdo->exec("
         INSERT IGNORE INTO `settings` (key_name, value) VALUES
         ('theme', 'light'),
@@ -137,13 +134,13 @@ try {
     </head>
     <body>
         <div class='box'>
-            <h1>✅ Setup Complete!</h1>
+            <h1>Setup Complete!</h1>
             <p>AS Pharmacy database created successfully.</p>
             <br>
-            <div class='step'>📧 Admin: admin@aspharmacy.com / admin</div>
-            <div class='step'>👤 Staff: staff@aspharmacy.com / staff</div>
-            <div class='step'>🗄️ Database: as_pharmacy (MySQL)</div>
-            <a href='../index.html'>Go to App →</a>
+            <div class='step'>Admin: admin@aspharmacy.com / admin</div>
+            <div class='step'>Staff: staff@aspharmacy.com / staff</div>
+            <div class='step'>Database: railway (MySQL)</div>
+            <a href='../index.html'>Go to App</a>
         </div>
     </body>
     </html>
@@ -151,10 +148,8 @@ try {
 
 } catch (PDOException $e) {
     echo "<pre style='background:#1e293b;color:#f87171;padding:2rem;border-radius:8px;'>
-❌ Setup Failed!
+Setup Failed!
 
 Error: " . htmlspecialchars($e->getMessage()) . "
-
-Make sure XAMPP is running with MySQL service started.
     </pre>";
 }
