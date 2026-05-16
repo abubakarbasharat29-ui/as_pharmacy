@@ -1,23 +1,24 @@
 # syntax=docker/dockerfile:1
 FROM php:8.2-apache
-
-# PDO MySQL extension install karo
-RUN docker-php-ext-install pdo pdo_mysql
-
-# mod_rewrite enable karo (API routing ke liye)
+ 
+# Fix MPM conflict
+RUN a2dismod mpm_event || true
+RUN a2enmod mpm_prefork
 RUN a2enmod rewrite
-
-# Apache config update karo taake .htaccess kaam kare
+ 
+# Install PDO MySQL
+RUN docker-php-ext-install pdo pdo_mysql
+ 
+# Apache config
 RUN echo '<Directory /var/www/html>\n\
     AllowOverride All\n\
     Require all granted\n\
 </Directory>' >> /etc/apache2/apache2.conf
-
-# Project files copy karo
+ 
+# Copy files
 COPY . /var/www/html/
-
-# Permissions set karo
 RUN chmod -R 755 /var/www/html
-
+ 
 EXPOSE 80
 CMD ["apache2-foreground"]
+ 
