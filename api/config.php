@@ -9,11 +9,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-define('DB_HOST', 'mysql.railway.internal');
-define('DB_PORT', '3306');
+define('DB_HOST', 'maglev.proxy.rlwy.net');
+define('DB_PORT', '27912');
 define('DB_USER', 'root');
-define('DB_PASS', getenv('MYSQLPASSWORD'));
-define('DB_NAME', getenv('MYSQLDATABASE'));
+define('DB_PASS', 'hNZKGzThVGeWEQvVsgeEZFfchYBosbdu');
+define('DB_NAME', 'railway');
 
 function getDB() {
     static $pdo = null;
