@@ -1,0 +1,21 @@
+FROM php:8.2-apache
+
+# PDO MySQL extension install karo
+RUN docker-php-ext-install pdo pdo_mysql
+
+# mod_rewrite enable karo (API routing ke liye)
+RUN a2enmod rewrite
+
+# Apache config update karo taake .htaccess kaam kare
+RUN echo '<Directory /var/www/html>\n\
+    AllowOverride All\n\
+    Require all granted\n\
+</Directory>' >> /etc/apache2/apache2.conf
+
+# Project files copy karo
+COPY . /var/www/html/
+
+# Permissions set karo
+RUN chmod -R 755 /var/www/html
+
+EXPOSE 80

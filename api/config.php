@@ -1,7 +1,7 @@
 <?php
 /**
  * AS Pharmacy - Database Configuration
- * Place this project in: C:/xampp/htdocs/as_pharmacy/
+ * Railway Deployment Version
  */
 
 header('Content-Type: application/json');
@@ -14,19 +14,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-// ─── DATABASE SETTINGS ───────────────────────────────────────────────────────
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');       // XAMPP default
-define('DB_PASS', '');           // XAMPP default (empty)
-define('DB_NAME', 'as_pharmacy');
+// ─── DATABASE SETTINGS (Railway environment variables) ────────────────────────
+// Railway automatically sets these environment variables for MySQL service
+define('DB_HOST', getenv('MYSQLHOST')     ?: 'localhost');
+define('DB_USER', getenv('MYSQLUSER')     ?: 'root');
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: 'railway');
+define('DB_PORT', getenv('MYSQLPORT')     ?: '3306');
 // ─────────────────────────────────────────────────────────────────────────────
 
 function getDB() {
     static $pdo = null;
     if ($pdo === null) {
         try {
+            $dsn = "mysql:host=" . DB_HOST . ";port=" . DB_PORT . ";dbname=" . DB_NAME . ";charset=utf8";
             $pdo = new PDO(
-                "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8",
+                $dsn,
                 DB_USER,
                 DB_PASS,
                 [
