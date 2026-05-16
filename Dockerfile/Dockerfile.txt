@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1
 FROM php:8.2-apache
 
 # PDO MySQL extension install karo
@@ -19,3 +20,4 @@ COPY . /var/www/html/
 RUN chmod -R 755 /var/www/html
 
 EXPOSE 80
+CMD ["apache2-foreground"]
