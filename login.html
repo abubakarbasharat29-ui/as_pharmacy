@@ -130,7 +130,7 @@
             if (user) window.location.href = 'dashboard.html';
         })();
 
-        // STEP 1: Email + Password verify karke OTP bhejo
+        // STEP 1: Credentials verify karo phir OTP bhejo
         async function handleLogin() {
             const email    = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
@@ -149,10 +149,14 @@
                 const result = await Storage.login(email, password);
 
                 if (result.success) {
-                    // Logout karo — OTP ke baad wapas login karenge
-                    await Storage.logout();
                     verifiedEmail = email;
                     verifiedPass  = password;
+
+                    // *** IMPORTANT FIX ***
+                    // Storage.logout() redirect karta hai login.html pe
+                    // isliye hum seedha API call karte hain bina redirect ke
+                    await fetch('api/auth.php?action=logout', { credentials: 'same-origin' });
+                    Storage._initPromise = null; // cache reset
 
                     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP...';
 
@@ -163,7 +167,6 @@
                         btn.disabled = false;
                         btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
                     }
-                    // sent=true hone par showStep2() already call ho chuka hai
 
                 } else {
                     showError('loginError', result.message || 'Invalid email or password');
@@ -196,7 +199,6 @@
                 console.log('Email successfully bheji!');
                 showStep2(email);
                 return true;
-
             } catch(err) {
                 console.error('EmailJS error:', err);
                 return false;
@@ -213,12 +215,10 @@
             clearOTPBoxes();
             startTimer();
 
-            // Login button reset karo
             const btn = document.getElementById('loginBtn');
             btn.disabled = false;
             btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
 
-            // Pehle box pe focus
             setTimeout(() => { document.getElementById('otp1').focus(); }, 100);
         }
 
@@ -246,6 +246,7 @@
                 verifyBtn.disabled = true;
                 verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
 
+                // Ab final login karke dashboard pe bhejo
                 Storage.login(verifiedEmail, verifiedPass)
                     .then(() => {
                         window.location.href = 'dashboard.html';
@@ -305,7 +306,7 @@
             }, 1000);
         }
 
-        // OTP boxes — sirf numbers, auto focus next/prev
+        // OTP boxes — sirf numbers, auto focus
         function otpInput(current, prevId, nextId) {
             current.value = current.value.replace(/[^0-9]/g, '');
             if (current.value && nextId) document.getElementById(nextId).focus();
@@ -318,14 +319,12 @@
             if (e.key === 'Enter') verifyOTP();
         }
 
-        // Sab OTP boxes khali karo
         function clearOTPBoxes() {
             ['otp1','otp2','otp3','otp4','otp5','otp6'].forEach(id => {
                 document.getElementById(id).value = '';
             });
         }
 
-        // Error show/hide
         function showError(id, msg) {
             const el = document.getElementById(id);
             el.style.display = 'block';
@@ -336,7 +335,6 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // Password show/hide toggle
         function togglePassword() {
             const input = document.getElementById('password');
             const icon  = document.getElementById('passwordIcon');
