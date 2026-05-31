@@ -3,20 +3,1091 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AS Pharmacy - Loading...</title>
+    <title>AS Pharmacy - Your Health, Our Priority</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            overflow-x: hidden;
+        }
+
+        /* ── NAVBAR ── */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 999;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .nav-logo-icon {
+            width: 38px; height: 38px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1rem;
+        }
+
+        .nav-logo-text {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #94a3b8;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover { color: #10b981; }
+
+        .nav-btns {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-nav-login {
+            padding: 0.5rem 1.25rem;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-login:hover {
+            border-color: #10b981;
+            color: #10b981;
+        }
+
+        .btn-nav-signup {
+            padding: 0.5rem 1.25rem;
+            border: none;
+            background: #10b981;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .btn-nav-signup:hover { background: #059669; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(ellipse at center, rgba(16,185,129,0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.3);
+            color: #10b981;
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-quote {
+            font-size: 1.15rem;
+            color: #64748b;
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        .hero-quote strong {
+            color: #10b981;
+            font-style: normal;
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero-primary {
+            padding: 0.875rem 2rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-hero-primary:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16,185,129,0.3);
+        }
+
+        .btn-hero-outline {
+            padding: 0.875rem 2rem;
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+        }
+
+        .btn-hero-outline:hover {
+            border-color: #10b981;
+            color: #10b981;
+            transform: translateY(-2px);
+        }
+
+        /* ── STATS ── */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: rgba(255,255,255,0.05);
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .stat-item {
+            padding: 2rem;
+            text-align: center;
+            background: #0f172a;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #10b981;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        /* ── SECTIONS ── */
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            color: #10b981;
+            padding: 0.3rem 0.875rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 0.75rem;
+        }
+
+        .section-sub {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 3rem;
+            max-width: 500px;
+        }
+
+        /* ── ABOUT ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+            margin-top: 2rem;
+        }
+
+        .about-feature {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .about-feature-icon {
+            width: 40px; height: 40px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #10b981;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+
+        .about-feature-text h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .about-feature-text p {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .about-visual {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .about-card {
+            background: rgba(16,185,129,0.05);
+            border: 1px solid rgba(16,185,129,0.15);
+            border-radius: 12px;
+            padding: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .about-card-icon {
+            width: 44px; height: 44px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .about-card-info span {
+            font-size: 0.75rem;
+            color: #64748b;
+            display: block;
+        }
+
+        .about-card-info strong {
+            font-size: 0.95rem;
+            color: white;
+        }
+
+        /* ── QUOTES ── */
+        .quotes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .quote-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.75rem;
+            position: relative;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .quote-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16,185,129,0.3);
+        }
+
+        .quote-card::before {
+            content: '"';
+            position: absolute;
+            top: 1rem; right: 1.5rem;
+            font-size: 4rem;
+            color: rgba(16,185,129,0.15);
+            font-family: Georgia, serif;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+            font-style: italic;
+        }
+
+        .quote-author {
+            font-size: 0.8rem;
+            color: #10b981;
+            font-weight: 600;
+        }
+
+        /* ── INFO CARDS ── */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .info-card {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(16,185,129,0.3);
+        }
+
+        .info-card-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .info-card p {
+            font-size: 0.85rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* ── MAP ── */
+        .map-wrapper {
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.06);
+            height: 400px;
+        }
+
+        .map-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            filter: invert(90%) hue-rotate(180deg);
+        }
+
+        /* ── CONTACT ── */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .contact-item {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .contact-item-icon {
+            width: 44px; height: 44px;
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #10b981;
+            flex-shrink: 0;
+        }
+
+        .contact-item-text h4 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+
+        .contact-item-text p {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .contact-form {
+            background: #1e293b;
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .contact-form h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-field {
+            margin-bottom: 1rem;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #94a3b8;
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .form-field input,
+        .form-field textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .form-field input:focus,
+        .form-field textarea:focus {
+            border-color: #10b981;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .btn-contact {
+            width: 100%;
+            padding: 0.875rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-contact:hover { background: #059669; }
+
+        /* ── FOOTER ── */
+        footer {
+            background: #0a0f1e;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding: 3rem 2rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .footer-logo-text {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 1.5rem 0;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #64748b;
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover { color: #10b981; }
+
+        .footer-copy {
+            color: #334155;
+            font-size: 0.8rem;
+        }
+
+        /* ── DIVIDER ── */
+        .section-divider {
+            height: 1px;
+            background: rgba(255,255,255,0.05);
+            margin: 0 2rem;
+        }
+
+        /* ── SCROLL ANIMATION ── */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .about-grid, .contact-grid { grid-template-columns: 1fr; }
+            .quotes-grid, .info-grid { grid-template-columns: 1fr; }
+            .nav-links { display: none; }
+        }
+    </style>
 </head>
-<body style="background:#0f172a;display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:white;">
-    <div style="text-align:center;">
-        <h1 style="margin-bottom:1rem;">AS Pharmacy</h1>
-        <p>Initializing system...</p>
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="#" class="nav-logo">
+            <div class="nav-logo-icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+            <span class="nav-logo-text">AS Pharmacy</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#info">Health Info</a></li>
+            <li><a href="#quotes">Quotes</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="nav-btns">
+            <a href="login.html" class="btn-nav-login"><i class="fa-solid fa-right-to-bracket"></i> Login</a>
+            <a href="signup.html" class="btn-nav-signup"><i class="fa-solid fa-user-plus"></i> Sign Up</a>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <div class="hero">
+        <div>
+            <div class="hero-badge">
+                <i class="fa-solid fa-shield-heart"></i>
+                Trusted Pharmacy Management System
+            </div>
+            <h1>Your Health is Our<br><span>Top Priority</span></h1>
+            <p class="hero-quote">
+                "The art of medicine consists of amusing the patient while nature cures the disease."<br>
+                <strong>— Voltaire</strong>
+            </p>
+            <div class="hero-btns">
+                <a href="signup.html" class="btn-hero-primary">
+                    <i class="fa-solid fa-user-plus"></i> Get Started Free
+                </a>
+                <a href="#about" class="btn-hero-outline">
+                    <i class="fa-solid fa-circle-info"></i> Learn More
+                </a>
+            </div>
+        </div>
     </div>
-    <script src="assets/js/storage.js"></script>
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-number">500+</span>
+            <span class="stat-label">Medicines Tracked</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">100%</span>
+            <span class="stat-label">Secure & Encrypted</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">24/7</span>
+            <span class="stat-label">System Available</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">99.9%</span>
+            <span class="stat-label">Uptime Guaranteed</span>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about" class="fade-in">
+        <div class="about-grid">
+            <div>
+                <div class="section-badge"><i class="fa-solid fa-circle-info"></i> About Us</div>
+                <h2 class="section-title">Smart Pharmacy<br>Management System</h2>
+                <p class="section-sub">AS Pharmacy is a complete solution for managing medicines, sales, billing, attendance and reports — all in one place.</p>
+                <div class="about-features">
+                    <div class="about-feature">
+                        <div class="about-feature-icon"><i class="fa-solid fa-capsules"></i></div>
+                        <div class="about-feature-text">
+                            <h4>Inventory Management</h4>
+                            <p>Track medicine stock, expiry dates and low stock alerts in real time.</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon"><i class="fa-solid fa-receipt"></i></div>
+                        <div class="about-feature-text">
+                            <h4>Billing System</h4>
+                            <p>Create bills instantly with discount options and print invoices.</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                        <div class="about-feature-text">
+                            <h4>Reports & Analytics</h4>
+                            <p>View sales performance, revenue charts and top selling medicines.</p>
+                        </div>
+                    </div>
+                    <div class="about-feature">
+                        <div class="about-feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                        <div class="about-feature-text">
+                            <h4>Secure & Protected</h4>
+                            <p>OTP login, session handling, XSS protection and secure cookies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="about-visual">
+                <div class="about-card">
+                    <div class="about-card-icon"><i class="fa-solid fa-capsules"></i></div>
+                    <div class="about-card-info">
+                        <span>Total Medicines</span>
+                        <strong>500+ Items Tracked</strong>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon"><i class="fa-solid fa-cart-shopping"></i></div>
+                    <div class="about-card-info">
+                        <span>Daily Sales</span>
+                        <strong>Real-time Billing</strong>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon"><i class="fa-solid fa-user-check"></i></div>
+                    <div class="about-card-info">
+                        <span>Staff Management</span>
+                        <strong>Attendance System</strong>
+                    </div>
+                </div>
+                <div class="about-card">
+                    <div class="about-card-icon"><i class="fa-solid fa-database"></i></div>
+                    <div class="about-card-info">
+                        <span>Database</span>
+                        <strong>MySQL — Railway Cloud</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- HEALTH INFO -->
+    <section id="info" class="fade-in">
+        <div style="text-align:center;margin-bottom:3rem;">
+            <div class="section-badge"><i class="fa-solid fa-heart-pulse"></i> Health Information</div>
+            <h2 class="section-title">Important Health Tips</h2>
+            <p class="section-sub" style="margin:0 auto;">Simple habits that keep you healthy every day.</p>
+        </div>
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(16,185,129,0.1);color:#10b981;">
+                    <i class="fa-solid fa-droplet"></i>
+                </div>
+                <h3>Stay Hydrated</h3>
+                <p>Drink at least 8 glasses of water daily. Proper hydration improves digestion, skin health, and energy levels throughout the day.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(59,130,246,0.1);color:#3b82f6;">
+                    <i class="fa-solid fa-pills"></i>
+                </div>
+                <h3>Take Medicines on Time</h3>
+                <p>Always take prescribed medicines at the correct time and dosage. Never skip doses without consulting your doctor first.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(245,158,11,0.1);color:#f59e0b;">
+                    <i class="fa-solid fa-apple-whole"></i>
+                </div>
+                <h3>Balanced Diet</h3>
+                <p>Eat fruits, vegetables, proteins and whole grains daily. A balanced diet boosts immunity and prevents chronic diseases.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(244,63,94,0.1);color:#f43f5e;">
+                    <i class="fa-solid fa-person-running"></i>
+                </div>
+                <h3>Exercise Regularly</h3>
+                <p>At least 30 minutes of physical activity daily reduces risk of heart disease, diabetes and improves mental health.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(139,92,246,0.1);color:#8b5cf6;">
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+                <h3>Quality Sleep</h3>
+                <p>7-9 hours of sleep per night is essential. Good sleep improves memory, mood and overall physical health.</p>
+            </div>
+            <div class="info-card">
+                <div class="info-card-icon" style="background:rgba(20,184,166,0.1);color:#14b8a6;">
+                    <i class="fa-solid fa-hand-sparkles"></i>
+                </div>
+                <h3>Hand Hygiene</h3>
+                <p>Wash hands regularly with soap for at least 20 seconds. This simple habit prevents spread of infections and diseases.</p>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- QUOTES -->
+    <section id="quotes" class="fade-in">
+        <div style="text-align:center;margin-bottom:3rem;">
+            <div class="section-badge"><i class="fa-solid fa-quote-left"></i> Inspiration</div>
+            <h2 class="section-title">Medical Wisdom</h2>
+            <p class="section-sub" style="margin:0 auto;">Words that inspire health and healing.</p>
+        </div>
+        <div class="quotes-grid">
+            <div class="quote-card">
+                <p class="quote-text">The greatest medicine of all is teaching people how not to need it.</p>
+                <span class="quote-author">— Hippocrates</span>
+            </div>
+            <div class="quote-card">
+                <p class="quote-text">To keep the body in good health is a duty, otherwise we shall not be able to keep our mind strong and clear.</p>
+                <span class="quote-author">— Buddha</span>
+            </div>
+            <div class="quote-card">
+                <p class="quote-text">Health is not valued till sickness comes. Take care of your body — it is the only place you have to live.</p>
+                <span class="quote-author">— Thomas Fuller</span>
+            </div>
+            <div class="quote-card">
+                <p class="quote-text">An ounce of prevention is worth a pound of cure. Prevention is better than treatment in all cases.</p>
+                <span class="quote-author">— Benjamin Franklin</span>
+            </div>
+            <div class="quote-card">
+                <p class="quote-text">The doctor of the future will give no medicine, but will interest patients in the care of the human frame.</p>
+                <span class="quote-author">— Thomas Edison</span>
+            </div>
+            <div class="quote-card">
+                <p class="quote-text">It is health that is real wealth and not pieces of gold and silver. Nurture it with love and care every day.</p>
+                <span class="quote-author">— Mahatma Gandhi</span>
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- MAP -->
+    <section id="map" class="fade-in">
+        <div style="text-align:center;margin-bottom:2rem;">
+            <div class="section-badge"><i class="fa-solid fa-location-dot"></i> Location</div>
+            <h2 class="section-title">Find Us Here</h2>
+            <p class="section-sub" style="margin:0 auto;">Visit our pharmacy in Lahore, Pakistan.</p>
+        </div>
+        <div class="map-wrapper">
+            <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435817.41138864365!2d73.87076899999999!3d31.5203696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe6ccc7e2462!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1699000000000!5m2!1sen!2s"
+                allowfullscreen=""
+                loading="lazy">
+            </iframe>
+        </div>
+    </section>
+
+    <div class="section-divider"></div>
+
+    <!-- CONTACT -->
+    <section id="contact" class="fade-in">
+        <div style="margin-bottom:3rem;">
+            <div class="section-badge"><i class="fa-solid fa-envelope"></i> Contact Us</div>
+            <h2 class="section-title">Get In Touch</h2>
+            <p class="section-sub">Have questions? We are here to help you anytime.</p>
+        </div>
+        <div class="contact-grid">
+            <div class="contact-info">
+                <div class="contact-item">
+                    <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div class="contact-item-text">
+                        <h4>Address</h4>
+                        <p>Main Boulevard, Gulberg III<br>Lahore, Punjab, Pakistan</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
+                    <div class="contact-item-text">
+                        <h4>Phone</h4>
+                        <p>+92 300 1234567<br>+92 42 1234567</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon"><i class="fa-solid fa-envelope"></i></div>
+                    <div class="contact-item-text">
+                        <h4>Email</h4>
+                        <p>info@aspharmacy.com<br>support@aspharmacy.com</p>
+                    </div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-item-icon"><i class="fa-solid fa-clock"></i></div>
+                    <div class="contact-item-text">
+                        <h4>Working Hours</h4>
+                        <p>Monday – Saturday: 8am – 10pm<br>Sunday: 10am – 6pm</p>
+                    </div>
+                </div>
+            </div>
+            <div class="contact-form">
+                <h3><i class="fa-solid fa-paper-plane" style="color:#10b981;margin-right:0.5rem;"></i>Send a Message</h3>
+                <div class="form-field">
+                    <label>Your Name</label>
+                    <input type="text" id="cName" placeholder="John Doe">
+                </div>
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input type="email" id="cEmail" placeholder="you@email.com">
+                </div>
+                <div class="form-field">
+                    <label>Message</label>
+                    <textarea id="cMessage" placeholder="Write your message here..."></textarea>
+                </div>
+                <button class="btn-contact" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+                <div id="msgFeedback" style="margin-top:0.75rem;font-size:0.85rem;display:none;text-align:center;padding:0.75rem;border-radius:8px;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">
+            <div class="footer-logo-icon"><i class="fa-solid fa-briefcase-medical"></i></div>
+            <span class="footer-logo-text">AS Pharmacy</span>
+        </div>
+        <div class="footer-links">
+            <a href="#about">About</a>
+            <a href="#info">Health Info</a>
+            <a href="#quotes">Quotes</a>
+            <a href="#contact">Contact</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html">Sign Up</a>
+        </div>
+        <p class="footer-copy">© 2026 AS Pharmacy. All rights reserved. Built with ❤️ for better healthcare.</p>
+    </footer>
+
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f172a;border-top:1px solid #1e293b;padding:1.25rem 2rem;box-shadow:0 -4px 30px rgba(0,0,0,0.3);">
+        <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:1rem;flex:1;min-width:250px;">
+                <div style="width:40px;height:40px;background:rgba(16,185,129,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-cookie-bite" style="color:#10b981;font-size:1.1rem;"></i>
+                </div>
+                <div>
+                    <p style="color:white;font-size:0.9rem;font-weight:600;margin:0 0 0.2rem;">We use cookies</p>
+                    <p style="color:#94a3b8;font-size:0.8rem;margin:0;">AS Pharmacy uses cookies to enhance your experience and keep you logged in securely.</p>
+                </div>
+            </div>
+            <div style="display:flex;gap:0.75rem;flex-shrink:0;">
+                <button onclick="declineCookies()" style="padding:0.6rem 1.25rem;border:1px solid #334155;background:transparent;color:#94a3b8;border-radius:8px;cursor:pointer;font-size:0.85rem;">Decline</button>
+                <button onclick="acceptCookies()" style="padding:0.6rem 1.5rem;border:none;background:#10b981;color:white;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                    <i class="fa-solid fa-check" style="margin-right:0.4rem;"></i> Accept All Cookies
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        (async () => {
-            await Storage.init();
-            const user = Storage.getCurrentUser();
-            window.location.href = user ? 'dashboard.html' : 'login.html';
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(a => {
+            a.addEventListener('click', e => {
+                e.preventDefault();
+                const target = document.querySelector(a.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Contact form
+        function sendMessage() {
+            const name    = document.getElementById('cName').value.trim();
+            const email   = document.getElementById('cEmail').value.trim();
+            const message = document.getElementById('cMessage').value.trim();
+            const fb      = document.getElementById('msgFeedback');
+
+            if (!name || !email || !message) {
+                fb.style.display = 'block';
+                fb.style.background = 'rgba(239,68,68,0.1)';
+                fb.style.color = '#f87171';
+                fb.innerText = 'Please fill all fields before sending.';
+                return;
+            }
+
+            fb.style.display = 'block';
+            fb.style.background = 'rgba(16,185,129,0.1)';
+            fb.style.color = '#10b981';
+            fb.innerText = 'Thank you! Your message has been sent successfully.';
+            document.getElementById('cName').value    = '';
+            document.getElementById('cEmail').value   = '';
+            document.getElementById('cMessage').value = '';
+        }
+
+        // Cookie Banner
+        (function() {
+            if (!localStorage.getItem('cookieConsent')) {
+                setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 1500);
+            }
         })();
+
+        function acceptCookies() { localStorage.setItem('cookieConsent','accepted'); hideBanner(); }
+        function declineCookies() { localStorage.setItem('cookieConsent','declined'); hideBanner(); }
+        function hideBanner() {
+            const b = document.getElementById('cookieBanner');
+            b.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            b.style.transform = 'translateY(100%)';
+            b.style.opacity = '0';
+            setTimeout(() => b.style.display = 'none', 300);
+        }
     </script>
 </body>
 </html>
