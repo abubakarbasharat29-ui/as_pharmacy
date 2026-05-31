@@ -916,11 +916,11 @@
         <div style="text-align:center;margin-bottom:2rem;">
             <div class="section-badge"><i class="fa-solid fa-location-dot"></i> Location</div>
             <h2 class="section-title">Find Us Here</h2>
-            <p class="section-sub" style="margin:0 auto;">Visit our pharmacy in Lahore, Pakistan.</p>
+            <p class="section-sub" style="margin:0 auto;">Visit our pharmacy in Sargodha, Pakistan.</p>
         </div>
         <div class="map-wrapper">
             <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d435817.41138864365!2d73.87076899999999!3d31.5203696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39190483e58107d9%3A0xc23abe6ccc7e2462!2sLahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1699000000000!5m2!1sen!2s"
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d109418.78039927396!2d72.6!3d32.0836!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3922a849a12b1f77%3A0x3af9634f8e7c8d5!2sSargodha%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1699000000000!5m2!1sen!2s"
                 allowfullscreen=""
                 loading="lazy">
             </iframe>
@@ -931,25 +931,44 @@
 
     <!-- CONTACT -->
     <section id="contact" class="fade-in">
-        <div style="margin-bottom:3rem;">
+        <div style="margin-bottom:2rem;">
             <div class="section-badge"><i class="fa-solid fa-envelope"></i> Contact Us</div>
             <h2 class="section-title">Get In Touch</h2>
             <p class="section-sub">Have questions? We are here to help you anytime.</p>
         </div>
-        <div class="contact-grid">
+        <div class="contact-grid" style="align-items:flex-start;">
+            <div class="contact-form">
+                <h3><i class="fa-solid fa-paper-plane" style="color:#10b981;margin-right:0.5rem;"></i>Send a Message</h3>
+                <div class="form-field">
+                    <label>Your Name</label>
+                    <input type="text" id="cName" placeholder="John Doe">
+                </div>
+                <div class="form-field">
+                    <label>Email Address</label>
+                    <input type="email" id="cEmail" placeholder="you@email.com">
+                </div>
+                <div class="form-field">
+                    <label>Message <span id="charCount" style="color:#64748b;font-weight:400;text-transform:none;letter-spacing:0;">(0/200)</span></label>
+                    <textarea id="cMessage" placeholder="Write your message here..." maxlength="200" oninput="updateCharCount()" style="min-height:100px;"></textarea>
+                </div>
+                <button class="btn-contact" onclick="sendMessage()">
+                    <i class="fa-solid fa-paper-plane"></i> Send Message
+                </button>
+                <div id="msgFeedback" style="margin-top:0.75rem;font-size:0.85rem;display:none;text-align:center;padding:0.75rem;border-radius:8px;"></div>
+            </div>
             <div class="contact-info">
                 <div class="contact-item">
                     <div class="contact-item-icon"><i class="fa-solid fa-location-dot"></i></div>
                     <div class="contact-item-text">
                         <h4>Address</h4>
-                        <p>Main Boulevard, Gulberg III<br>Lahore, Punjab, Pakistan</p>
+                        <p>Rasheed Colony<br>Sargodha, Punjab, Pakistan</p>
                     </div>
                 </div>
                 <div class="contact-item">
                     <div class="contact-item-icon"><i class="fa-solid fa-phone"></i></div>
                     <div class="contact-item-text">
                         <h4>Phone</h4>
-                        <p>+92 300 1234567<br>+92 42 1234567</p>
+                        <p>+92 334 1433051<br>+92 42 1234567</p>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -963,28 +982,9 @@
                     <div class="contact-item-icon"><i class="fa-solid fa-clock"></i></div>
                     <div class="contact-item-text">
                         <h4>Working Hours</h4>
-                        <p>Monday – Saturday: 8am – 10pm<br>Sunday: 10am – 6pm</p>
+                        <p>Monday – Saturday: 8am – 10pm<br>Sunday: 10am – 10pm</p>
                     </div>
                 </div>
-            </div>
-            <div class="contact-form">
-                <h3><i class="fa-solid fa-paper-plane" style="color:#10b981;margin-right:0.5rem;"></i>Send a Message</h3>
-                <div class="form-field">
-                    <label>Your Name</label>
-                    <input type="text" id="cName" placeholder="John Doe">
-                </div>
-                <div class="form-field">
-                    <label>Email Address</label>
-                    <input type="email" id="cEmail" placeholder="you@email.com">
-                </div>
-                <div class="form-field">
-                    <label>Message</label>
-                    <textarea id="cMessage" placeholder="Write your message here..."></textarea>
-                </div>
-                <button class="btn-contact" onclick="sendMessage()">
-                    <i class="fa-solid fa-paper-plane"></i> Send Message
-                </button>
-                <div id="msgFeedback" style="margin-top:0.75rem;font-size:0.85rem;display:none;text-align:center;padding:0.75rem;border-radius:8px;"></div>
             </div>
         </div>
     </section>
@@ -1048,11 +1048,33 @@
             });
         });
 
-        // Contact form
+        // Contact form with localStorage save
+        const cName    = document.getElementById('cName');
+        const cEmail   = document.getElementById('cEmail');
+        const cMessage = document.getElementById('cMessage');
+
+        // Load saved draft from localStorage
+        if (localStorage.getItem('draft_name'))    cName.value    = localStorage.getItem('draft_name');
+        if (localStorage.getItem('draft_email'))   cEmail.value   = localStorage.getItem('draft_email');
+        if (localStorage.getItem('draft_message')) cMessage.value = localStorage.getItem('draft_message');
+        updateCharCount();
+
+        // Auto-save on input
+        cName.addEventListener('input',    () => localStorage.setItem('draft_name',    cName.value));
+        cEmail.addEventListener('input',   () => localStorage.setItem('draft_email',   cEmail.value));
+        cMessage.addEventListener('input', () => localStorage.setItem('draft_message', cMessage.value));
+
+        function updateCharCount() {
+            const len = cMessage.value.length;
+            const counter = document.getElementById('charCount');
+            counter.innerText = '(' + len + '/200)';
+            counter.style.color = len >= 180 ? '#f59e0b' : len >= 200 ? '#f43f5e' : '#64748b';
+        }
+
         function sendMessage() {
-            const name    = document.getElementById('cName').value.trim();
-            const email   = document.getElementById('cEmail').value.trim();
-            const message = document.getElementById('cMessage').value.trim();
+            const name    = cName.value.trim();
+            const email   = cEmail.value.trim();
+            const message = cMessage.value.trim();
             const fb      = document.getElementById('msgFeedback');
 
             if (!name || !email || !message) {
@@ -1067,9 +1089,13 @@
             fb.style.background = 'rgba(16,185,129,0.1)';
             fb.style.color = '#10b981';
             fb.innerText = 'Thank you! Your message has been sent successfully.';
-            document.getElementById('cName').value    = '';
-            document.getElementById('cEmail').value   = '';
-            document.getElementById('cMessage').value = '';
+
+            // Clear form and localStorage after successful send
+            cName.value = ''; cEmail.value = ''; cMessage.value = '';
+            localStorage.removeItem('draft_name');
+            localStorage.removeItem('draft_email');
+            localStorage.removeItem('draft_message');
+            updateCharCount();
         }
 
         // Cookie Banner
