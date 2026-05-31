@@ -213,7 +213,7 @@
                     document.getElementById('signupError').style.display   = 'none';
                     document.getElementById('signupSuccess').style.display = 'block';
                     document.getElementById('signupSuccess').querySelector('span').innerText = 'Account created! Redirecting to login...';
-                    setTimeout(() => window.location.href = 'login.html', 2000);
+                    setTimeout(() => window.location.href = 'index.html', 2000);
                 } else {
                     showError(result.message || 'Registration failed.');
                     btn.disabled = false;
