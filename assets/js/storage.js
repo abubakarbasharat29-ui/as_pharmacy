@@ -150,7 +150,7 @@ const Storage = {
     async logout() {
         await _api('auth.php', 'GET', null, { action: 'logout' });
         _cache.session = null;
-        window.location.href = 'login.html';
+        window.location.href = 'index.html';
     },
 
     // ── ATTENDANCE AUTO-MARK ──────────────────────────────────────────────────
