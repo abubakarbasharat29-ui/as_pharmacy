@@ -116,6 +116,27 @@
     <script src="assets/js/storage.js"></script>
     <script src="assets/js/components.js"></script>
     <script>
+        // ── BACK BUTTON FIX ──
+        // Logout ke baad back button dabane pe index.html pe bhejo
+        (async () => {
+            await Storage.init();
+            const user = Storage.getCurrentUser();
+            if (!user) {
+                window.location.replace('index.html');
+                return;
+            }
+            // History mein current page push karo taake back button kaam na kare
+            history.pushState(null, '', location.href);
+            window.addEventListener('popstate', async () => {
+                await Storage.init();
+                if (!Storage.getCurrentUser()) {
+                    window.location.replace('index.html');
+                } else {
+                    history.pushState(null, '', location.href);
+                }
+            });
+        })();
+
         let salesChart = null;
         let _meds = [], _sales = [];
 
@@ -203,41 +224,42 @@
             });
         }
     </script>
+
     <!-- COOKIES BANNER -->
-<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f172a;border-top:1px solid #1e293b;padding:1.25rem 2rem;box-shadow:0 -4px 30px rgba(0,0,0,0.3);">
-    <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:1rem;flex:1;min-width:250px;">
-            <div style="width:40px;height:40px;background:rgba(16,185,129,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <i class="fa-solid fa-cookie-bite" style="color:#10b981;font-size:1.1rem;"></i>
+    <div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#0f172a;border-top:1px solid #1e293b;padding:1.25rem 2rem;box-shadow:0 -4px 30px rgba(0,0,0,0.3);">
+        <div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap;">
+            <div style="display:flex;align-items:center;gap:1rem;flex:1;min-width:250px;">
+                <div style="width:40px;height:40px;background:rgba(16,185,129,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fa-solid fa-cookie-bite" style="color:#10b981;font-size:1.1rem;"></i>
+                </div>
+                <div>
+                    <p style="color:white;font-size:0.9rem;font-weight:600;margin:0 0 0.2rem;">We use cookies</p>
+                    <p style="color:#94a3b8;font-size:0.8rem;margin:0;">AS Pharmacy uses cookies to enhance your experience and keep you logged in securely.</p>
+                </div>
             </div>
-            <div>
-                <p style="color:white;font-size:0.9rem;font-weight:600;margin:0 0 0.2rem;">We use cookies</p>
-                <p style="color:#94a3b8;font-size:0.8rem;margin:0;">AS Pharmacy uses cookies to enhance your experience and keep you logged in securely.</p>
+            <div style="display:flex;gap:0.75rem;flex-shrink:0;">
+                <button onclick="declineCookies()" style="padding:0.6rem 1.25rem;border:1px solid #334155;background:transparent;color:#94a3b8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:500;">Decline</button>
+                <button onclick="acceptCookies()" style="padding:0.6rem 1.5rem;border:none;background:#10b981;color:white;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
+                    <i class="fa-solid fa-check" style="margin-right:0.4rem;"></i> Accept All Cookies
+                </button>
             </div>
-        </div>
-        <div style="display:flex;gap:0.75rem;flex-shrink:0;">
-            <button onclick="declineCookies()" style="padding:0.6rem 1.25rem;border:1px solid #334155;background:transparent;color:#94a3b8;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:500;">Decline</button>
-            <button onclick="acceptCookies()" style="padding:0.6rem 1.5rem;border:none;background:#10b981;color:white;border-radius:8px;cursor:pointer;font-size:0.85rem;font-weight:600;">
-                <i class="fa-solid fa-check" style="margin-right:0.4rem;"></i> Accept All Cookies
-            </button>
         </div>
     </div>
-</div>
-<script>
-(function() {
-    if (!localStorage.getItem('cookieConsent')) {
-        setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 1000);
-    }
-})();
-function acceptCookies() { localStorage.setItem('cookieConsent','accepted'); hideBanner(); }
-function declineCookies() { localStorage.setItem('cookieConsent','declined'); hideBanner(); }
-function hideBanner() {
-    const b = document.getElementById('cookieBanner');
-    b.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    b.style.transform = 'translateY(100%)';
-    b.style.opacity = '0';
-    setTimeout(() => b.style.display = 'none', 300);
-}
-</script>
+    <script>
+        (function() {
+            if (!localStorage.getItem('cookieConsent')) {
+                setTimeout(() => { document.getElementById('cookieBanner').style.display = 'block'; }, 1000);
+            }
+        })();
+        function acceptCookies()  { localStorage.setItem('cookieConsent','accepted'); hideBanner(); }
+        function declineCookies() { localStorage.setItem('cookieConsent','declined'); hideBanner(); }
+        function hideBanner() {
+            const b = document.getElementById('cookieBanner');
+            b.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+            b.style.transform  = 'translateY(100%)';
+            b.style.opacity    = '0';
+            setTimeout(() => b.style.display = 'none', 300);
+        }
+    </script>
 </body>
 </html>
