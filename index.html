@@ -1123,7 +1123,7 @@
         (async () => {
             await Storage.init();
             const user = Storage.getCurrentUser();
-            if (user) {
+            if (user && window.location.pathname.includes('index')) {
                 window.location.replace(user.role === 'admin' ? 'admin.html' : 'dashboard.html');
             }
         })();
