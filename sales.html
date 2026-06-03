@@ -99,6 +99,8 @@
         let allSales = [], filteredSales = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const user = Storage.getCurrentUser();
+if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('sales');
             await Components.renderTopbar('Sales History');
             allSales = await Storage.fetch(DB.SALES);

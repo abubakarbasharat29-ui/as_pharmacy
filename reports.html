@@ -66,6 +66,8 @@
     <script src="assets/js/components.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            const user = Storage.getCurrentUser();
+if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('reports');
             await Components.renderTopbar('Analytics Reports');
             const sales = await Storage.fetch(DB.SALES);

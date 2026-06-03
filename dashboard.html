@@ -141,6 +141,8 @@
         let _meds = [], _sales = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
+            const user = Storage.getCurrentUser();
+if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('dashboard');
             await Components.renderTopbar('Dashboard Overview');
             [_meds, _sales] = await Promise.all([Storage.fetch(DB.MEDS), Storage.fetch(DB.SALES)]);
