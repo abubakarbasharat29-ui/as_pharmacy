@@ -56,9 +56,12 @@
                 <div class="auth-footer">
                     Don't have an account? <a href="signup.html" class="auth-link">Create one</a>
                 </div>
-                <div style="text-align:center;margin-top:0.75rem;">
+                <div style="text-align:center;margin-top:0.75rem;display:flex;justify-content:center;gap:1.5rem;">
                     <a href="admin-login.html" class="auth-link" style="font-size:0.8rem;color:var(--text-muted);">
                         <i class="fa-solid fa-user-shield"></i> Admin Login
+                    </a>
+                    <a href="index.html" class="auth-link" style="font-size:0.8rem;color:var(--text-muted);">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Home
                     </a>
                 </div>
             </div>
@@ -81,12 +84,12 @@
                     <p id="otpEmailDisplay" style="font-weight:600;font-size:0.9rem;margin:0;"></p>
                 </div>
                 <div style="display:flex;gap:0.5rem;justify-content:center;margin-bottom:1.5rem;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp1" oninput="otpInput(this,null,'otp2')" onkeydown="otpKeydown(event,this,null,'otp2')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp2" oninput="otpInput(this,'otp1','otp3')" onkeydown="otpKeydown(event,this,'otp1','otp3')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp3" oninput="otpInput(this,'otp2','otp4')" onkeydown="otpKeydown(event,this,'otp2','otp4')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp4" oninput="otpInput(this,'otp3','otp5')" onkeydown="otpKeydown(event,this,'otp3','otp5')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp5" oninput="otpInput(this,'otp4','otp6')" onkeydown="otpKeydown(event,this,'otp4','otp6')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
-                    <input type="text" inputmode="numeric" maxlength="1" class="form-control" id="otp6" oninput="otpInput(this,'otp5',null)" onkeydown="otpKeydown(event,this,'otp5',null)" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp1" oninput="otpInput(this,null,'otp2')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp2" oninput="otpInput(this,'otp1','otp3')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp3" oninput="otpInput(this,'otp2','otp4')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp4" oninput="otpInput(this,'otp3','otp5')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp5" oninput="otpInput(this,'otp4','otp6')" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
+                    <input type="text" maxlength="1" class="form-control" id="otp6" oninput="otpInput(this,'otp5',null)" style="width:50px;height:55px;text-align:center;font-size:1.5rem;font-weight:700;padding:0;">
                 </div>
                 <div style="text-align:center;margin-bottom:1.5rem;font-size:0.85rem;color:var(--text-muted);">
                     OTP expires in: <span id="timer" style="font-weight:700;color:var(--danger);">15:00</span>
@@ -105,7 +108,6 @@
                     </button>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -120,174 +122,105 @@
         let generatedOTP  = '';
         let otpExpiry     = null;
         let timerInterval = null;
-        let verifiedEmail = '';
-        let verifiedPass  = '';
 
-        // Auto-redirect agar pehle se logged in hai
         (async () => {
             await Storage.init();
             const user = Storage.getCurrentUser();
-            if (user)window.location.replace('dashboard.html');
+            if (user) window.location.replace('dashboard.html');
         })();
 
-        // STEP 1: Credentials verify karo phir OTP bhejo
         async function handleLogin() {
             const email    = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            if (!email || !password) { showError('loginError', 'Please fill all fields'); return; }
 
-            if (!email || !password) {
-                showError('loginError', 'Please fill all fields');
-                return;
+            // Email format validation
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showError('loginError', 'Please enter a valid email address.'); return;
             }
 
             const btn = document.getElementById('loginBtn');
             btn.disabled = true;
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Verifying...';
-            hideError('loginError');
 
-            try {
-                const result = await Storage.login(email, password);
-
-                if (result.success) {
-                    verifiedEmail = email;
-                    verifiedPass  = password;
-
-                    // *** IMPORTANT FIX ***
-                    // Storage.logout() redirect karta hai login.html pe
-                    // isliye hum seedha API call karte hain bina redirect ke
-                    await fetch('api/auth.php?action=logout', { credentials: 'same-origin' });
-                    Storage._initPromise = null; // cache reset
-
-                    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Sending OTP...';
-
-                    const sent = await sendOTP(email);
-
-                    if (!sent) {
-                        showError('loginError', 'OTP send nahi hua. Internet check karo aur dobara try karo.');
-                        btn.disabled = false;
-                        btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
-                    }
-
-                } else {
-                    showError('loginError', result.message || 'Invalid email or password');
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
-                }
-
-            } catch(err) {
-                console.error('Login error:', err);
-                showError('loginError', 'Kuch masla hua. Dobara try karo.');
+            const result = await Storage.login(email, password);
+            if (result.success) {
+                await Storage.logout();
+                await sendOTP(email);
+                btn.disabled = false;
+                btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
+            } else {
+                showError('loginError', result.message || 'Invalid email or password');
                 btn.disabled = false;
                 btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
             }
         }
 
-        // OTP generate karke email bhejo
         async function sendOTP(email) {
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
             otpExpiry    = Date.now() + 15 * 60 * 1000;
             const timeStr = new Date(otpExpiry).toLocaleTimeString();
-
-            console.log('OTP (debug):', generatedOTP);
-
             try {
                 await emailjs.send(EMAILJS_SERVICE, EMAILJS_TEMPLATE, {
-                    email:    email,
-                    passcode: generatedOTP,
-                    time:     timeStr
+                    email: email, passcode: generatedOTP, time: timeStr
                 });
-                console.log('Email successfully bheji!');
-                showStep2(email);
-                return true;
-            } catch(err) {
-                console.error('EmailJS error:', err);
-                return false;
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+                document.getElementById('otpEmailDisplay').innerText = email;
+                document.getElementById('otp1').focus();
+                startTimer();
+            } catch(e) {
+                await Storage.login(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                );
+                window.location.replace('dashboard.html');
             }
         }
 
-        // Step 1 chhupaو aur Step 2 dikhao
-        function showStep2(email) {
-            document.getElementById('step1').style.display = 'none';
-            document.getElementById('step2').style.display = 'block';
-            document.getElementById('otpEmailDisplay').innerText = email;
-            hideError('otpError');
-            document.getElementById('otpSuccess').style.display = 'none';
-            clearOTPBoxes();
-            startTimer();
-
-            const btn = document.getElementById('loginBtn');
-            btn.disabled = false;
-            btn.innerHTML = '<span>Sign In</span><i class="fa-solid fa-right-to-bracket"></i>';
-
-            setTimeout(() => { document.getElementById('otp1').focus(); }, 100);
-        }
-
-        // OTP verify karo
         function verifyOTP() {
             const entered = ['otp1','otp2','otp3','otp4','otp5','otp6']
-                .map(id => document.getElementById(id).value.trim()).join('');
-
-            if (entered.length !== 6) {
-                showError('otpError', 'Poora 6-digit OTP daalo');
-                return;
-            }
-            if (Date.now() > otpExpiry) {
-                showError('otpError', 'OTP expire ho gaya. Resend OTP click karo.');
-                return;
-            }
-
-            const verifyBtn = document.getElementById('verifyOtpBtn');
+                .map(id => document.getElementById(id).value).join('');
+            if (entered.length !== 6) { showError('otpError', 'Please enter complete 6-digit OTP'); return; }
+            if (Date.now() > otpExpiry) { showError('otpError', 'OTP expired. Click Resend OTP.'); return; }
 
             if (entered === generatedOTP) {
-                hideError('otpError');
+                document.getElementById('otpError').style.display   = 'none';
                 document.getElementById('otpSuccess').style.display = 'block';
-                document.getElementById('otpSuccess').querySelector('span').innerText = 'Verified! Redirect ho raha hai...';
+                document.getElementById('otpSuccess').querySelector('span').innerText = 'Verified! Redirecting...';
                 clearInterval(timerInterval);
-                verifyBtn.disabled = true;
-                verifyBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Logging in...';
-
-                // Ab final login karke dashboard pe bhejo
-                Storage.login(verifiedEmail, verifiedPass)
-                    .then(() => {
-                        window.location.href = 'dashboard.html';
-                    })
-                    .catch(err => {
-                        console.error('Final login error:', err);
-                        showError('otpError', 'Login mein masla. Wapas jaو aur dobara try karo.');
-                        verifyBtn.disabled = false;
-                        verifyBtn.innerHTML = '<span>Verify OTP</span><i class="fa-solid fa-shield-halved"></i>';
-                    });
+                Storage.login(
+                    document.getElementById('email').value,
+                    document.getElementById('password').value
+                ).then(() => { window.location.replace('dashboard.html'); });
             } else {
-                showError('otpError', 'Galat OTP hai. Dobara daalo.');
-                clearOTPBoxes();
-                setTimeout(() => { document.getElementById('otp1').focus(); }, 50);
+                showError('otpError', 'Invalid OTP. Please try again.');
+                ['otp1','otp2','otp3','otp4','otp5','otp6'].forEach(id => {
+                    document.getElementById(id).value = '';
+                });
+                document.getElementById('otp1').focus();
             }
         }
 
-        // OTP dobara bhejo
         async function resendOTP() {
+            ['otp1','otp2','otp3','otp4','otp5','otp6'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
             clearInterval(timerInterval);
-            clearOTPBoxes();
-            hideError('otpError');
             document.getElementById('otpSuccess').style.display = 'none';
-            document.getElementById('timer').innerText = '15:00';
-
-            const sent = await sendOTP(verifiedEmail);
-            if (!sent) {
-                showError('otpError', 'OTP dobara nahi bheja ja saka. Internet check karo.');
-            }
+            document.getElementById('otpError').style.display   = 'none';
+            await sendOTP(document.getElementById('email').value);
         }
 
-        // Login page pe wapas
         function backToLogin() {
             clearInterval(timerInterval);
             document.getElementById('step2').style.display = 'none';
             document.getElementById('step1').style.display = 'block';
-            hideError('loginError');
-            clearOTPBoxes();
+            ['otp1','otp2','otp3','otp4','otp5','otp6'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
         }
 
-        // 15 minute ka timer
         function startTimer() {
             clearInterval(timerInterval);
             const endTime = Date.now() + 15 * 60 * 1000;
@@ -296,7 +229,7 @@
                 if (remaining <= 0) {
                     clearInterval(timerInterval);
                     document.getElementById('timer').innerText = '00:00';
-                    showError('otpError', 'OTP expire ho gaya. Resend OTP click karo.');
+                    showError('otpError', 'OTP expired. Click Resend OTP.');
                     return;
                 }
                 const mins = Math.floor(remaining / 60000);
@@ -306,33 +239,15 @@
             }, 1000);
         }
 
-        // OTP boxes — sirf numbers, auto focus
         function otpInput(current, prevId, nextId) {
-            current.value = current.value.replace(/[^0-9]/g, '');
             if (current.value && nextId) document.getElementById(nextId).focus();
-        }
-
-        function otpKeydown(e, current, prevId, nextId) {
-            if (e.key === 'Backspace' && !current.value && prevId) {
-                document.getElementById(prevId).focus();
-            }
-            if (e.key === 'Enter') verifyOTP();
-        }
-
-        function clearOTPBoxes() {
-            ['otp1','otp2','otp3','otp4','otp5','otp6'].forEach(id => {
-                document.getElementById(id).value = '';
-            });
+            if (!current.value && prevId) document.getElementById(prevId).focus();
         }
 
         function showError(id, msg) {
             const el = document.getElementById(id);
             el.style.display = 'block';
             el.querySelector('span').innerText = msg;
-        }
-
-        function hideError(id) {
-            document.getElementById(id).style.display = 'none';
         }
 
         function togglePassword() {
@@ -352,7 +267,7 @@
                 </div>
                 <div>
                     <p style="color:white;font-size:0.9rem;font-weight:600;margin:0 0 0.2rem;">We use cookies</p>
-                    <p style="color:#94a3b8;font-size:0.8rem;margin:0;">AS Pharmacy uses cookies to enhance your experience and keep you logged in securely.</p>
+                    <p style="color:#94a3b8;font-size:0.8rem;margin:0;">AS Pharmacy uses cookies to enhance your experience.</p>
                 </div>
             </div>
             <div style="display:flex;gap:0.75rem;flex-shrink:0;">
@@ -374,8 +289,8 @@
         function hideBanner() {
             const b = document.getElementById('cookieBanner');
             b.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-            b.style.transform  = 'translateY(100%)';
-            b.style.opacity    = '0';
+            b.style.transform = 'translateY(100%)';
+            b.style.opacity = '0';
             setTimeout(() => b.style.display = 'none', 300);
         }
     </script>

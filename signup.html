@@ -84,7 +84,7 @@
                         <div class="input-wrapper">
                             <i class="fa-solid fa-globe input-icon"></i>
                             <select id="country" class="form-control" style="padding-left:2.5rem;" required>
-                                <option value=""> Select Country </option>
+                                <option value="">Select Country</option>
                                 <option value="Pakistan">Pakistan</option>
                                 <option value="Afghanistan">Afghanistan</option>
                                 <option value="Bangladesh">Bangladesh</option>
@@ -124,7 +124,7 @@
                         <label class="form-label">Password</label>
                         <div class="input-wrapper">
                             <i class="fa-solid fa-lock input-icon"></i>
-                            <input type="password" id="password" class="form-control" placeholder="Min. 6 characters" required minlength="6">
+                            <input type="password" id="password" class="form-control" placeholder="Min. 8 characters" required minlength="8">
                             <button type="button" class="input-toggle" onclick="togglePass('password','eye1')">
                                 <i class="fa-solid fa-eye" id="eye1"></i>
                             </button>
@@ -132,7 +132,7 @@
                     </div>
 
                     <!-- Confirm Password -->
-                    <div class="form-group full-width" style="margin-bottom:1.5rem;">
+                    <div class="form-group">
                         <label class="form-label">Confirm Password</label>
                         <div class="input-wrapper">
                             <i class="fa-solid fa-shield-halved input-icon"></i>
@@ -142,15 +142,43 @@
                             </button>
                         </div>
                     </div>
+
+                    <!-- Math CAPTCHA -->
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fa-solid fa-robot" style="color:var(--accent);margin-right:0.4rem;"></i>
+                            Security Check
+                        </label>
+                        <div style="display:flex;align-items:center;gap:1rem;">
+                            <div style="background:var(--surface-alt);border:1px solid var(--border);border-radius:var(--radius-md);padding:0.75rem 1.25rem;font-size:1.1rem;font-weight:700;color:var(--accent);min-width:120px;text-align:center;">
+                                <span id="captchaQuestion">Loading...</span>
+                            </div>
+                            <div class="input-wrapper" style="flex:1;">
+                                <i class="fa-solid fa-equals input-icon"></i>
+                                <input type="number" id="captchaAnswer" class="form-control" placeholder="Your answer" required>
+                            </div>
+                            <button type="button" onclick="generateCaptcha()" style="background:none;border:1px solid var(--border);border-radius:var(--radius-md);padding:0.75rem;cursor:pointer;color:var(--text-muted);transition:all 0.2s;" title="Refresh CAPTCHA">
+                                <i class="fa-solid fa-rotate-right"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary" id="signupBtn">
+                <button type="submit" class="btn btn-primary" id="signupBtn" style="margin-top:0.5rem;">
                     <span>Create Account</span>
                     <i class="fa-solid fa-user-plus"></i>
                 </button>
             </form>
+
             <div class="auth-footer">
                 Already have an account? <a href="login.html" class="auth-link">Sign In</a>
+            </div>
+
+            <!-- Back to Home -->
+            <div style="text-align:center;margin-top:0.75rem;">
+                <a href="index.html" class="auth-link" style="font-size:0.85rem;color:var(--text-muted);">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Home
+                </a>
             </div>
         </div>
     </div>
@@ -159,6 +187,21 @@
     <script src="assets/js/components.js"></script>
     <script>
         const RESERVED = ['admin','administrator','root','superuser','moderator','system','support'];
+        let captchaAnswer = 0;
+
+        // Generate Math CAPTCHA
+        function generateCaptcha() {
+            const ops = ['+', '-', '*'];
+            const op  = ops[Math.floor(Math.random() * ops.length)];
+            let a, b;
+            if (op === '+') { a = Math.floor(Math.random() * 20) + 1; b = Math.floor(Math.random() * 20) + 1; captchaAnswer = a + b; }
+            if (op === '-') { a = Math.floor(Math.random() * 20) + 10; b = Math.floor(Math.random() * 10) + 1; captchaAnswer = a - b; }
+            if (op === '*') { a = Math.floor(Math.random() * 9)  + 1; b = Math.floor(Math.random() * 9)  + 1; captchaAnswer = a * b; }
+            document.getElementById('captchaQuestion').innerText = a + ' ' + op + ' ' + b + ' = ?';
+            document.getElementById('captchaAnswer').value = '';
+        }
+
+        generateCaptcha();
 
         document.getElementById('signupForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -171,30 +214,49 @@
             const country  = document.getElementById('country').value;
             const password = document.getElementById('password').value;
             const confirm  = document.getElementById('confirmPassword').value;
+            const captcha  = parseInt(document.getElementById('captchaAnswer').value);
 
+            // Validation 1: Name must start with letter
             if (!/^[a-zA-Z]/.test(name)) {
                 showError('Name must start with a letter. Example: Kashif123'); return;
             }
+
+            // Validation 2: No special characters
             if (!/^[a-zA-Z][a-zA-Z0-9 ]*$/.test(name)) {
                 showError('Name cannot contain special characters like @, #, ! etc.'); return;
             }
+
+            // Validation 3: Reserved names
             if (RESERVED.includes(name.toLowerCase().trim())) {
                 showError('"' + name + '" is a reserved name. Please use a different name.'); return;
             }
+
+            // Validation 4: Email format
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 showError('Please enter a valid email address.'); return;
             }
-            if (!gender) {
-                showError('Please select your gender.'); return;
+
+            // Validation 5: Gender
+            if (!gender) { showError('Please select your gender.'); return; }
+
+            // Validation 6: Country
+            if (!country) { showError('Please select your country.'); return; }
+
+            // Validation 7: Password min 8 characters
+            if (password.length < 8) {
+                showError('Password must be at least 8 characters long.'); return;
             }
-            if (!country) {
-                showError('Please select your country.'); return;
-            }
-            if (password.length < 6) {
-                showError('Password must be at least 6 characters.'); return;
-            }
+
+            // Validation 8: Password match
             if (password !== confirm) {
-                showError('Passwords do not match.'); return;
+                showError('Passwords do not match. Please try again.'); return;
+            }
+
+            // Validation 9: CAPTCHA
+            if (isNaN(captcha) || captcha !== captchaAnswer) {
+                showError('Security check failed! Please solve the math problem correctly.');
+                generateCaptcha();
+                return;
             }
 
             const btn = document.getElementById('signupBtn');
@@ -213,7 +275,7 @@
                     document.getElementById('signupError').style.display   = 'none';
                     document.getElementById('signupSuccess').style.display = 'block';
                     document.getElementById('signupSuccess').querySelector('span').innerText = 'Account created! Redirecting to login...';
-                    setTimeout(() => window.location.href = 'index.html', 2000);
+                    setTimeout(() => window.location.href = 'login.html', 2000);
                 } else {
                     showError(result.message || 'Registration failed.');
                     btn.disabled = false;
