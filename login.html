@@ -127,7 +127,7 @@
         (async () => {
             await Storage.init();
             const user = Storage.getCurrentUser();
-            if (user) window.location.href = 'dashboard.html';
+            if (user)window.location.replace('dashboard.html');
         })();
 
         // STEP 1: Credentials verify karo phir OTP bhejo
