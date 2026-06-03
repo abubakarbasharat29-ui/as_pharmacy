@@ -66,7 +66,8 @@
     <script src="assets/js/components.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const user = Storage.getCurrentUser();
+            await Storage.init();
+const user = Storage.getCurrentUser();
 if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('attendance');
             await Components.renderTopbar('Attendance System');

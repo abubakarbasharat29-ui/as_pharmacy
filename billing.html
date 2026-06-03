@@ -98,7 +98,8 @@
         let _allMeds = [];
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const user = Storage.getCurrentUser();
+            await Storage.init();
+const user = Storage.getCurrentUser();
 if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('billing');
             await Components.renderTopbar('Billing System');

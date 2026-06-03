@@ -113,7 +113,8 @@
         let highlightId = null;
 
         document.addEventListener('DOMContentLoaded', async () => {
-            const user = Storage.getCurrentUser();
+            await Storage.init();
+const user = Storage.getCurrentUser();
 if (!user) { window.location.replace('index.html'); return; }
             await Components.renderSidebar('inventory');
             await Components.renderTopbar('Inventory Management');
