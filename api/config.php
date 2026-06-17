@@ -18,10 +18,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-define('DB_HOST', 'maglev.proxy.rlwy.net');
-define('DB_PORT', '27912');
+define('DB_HOST', 'thomas.proxy.rlwy.net');
+define('DB_PORT', '26930');
 define('DB_USER', 'root');
-define('DB_PASS', 'hNZKGzThVGeWEQvVsgeEZFfchYBosbdu');
+define('DB_PASS', 'BpyUIZzpAevZkLnxxqyirTViZhLzfLoI');
 define('DB_NAME', 'railway');
 
 function getDB() {
