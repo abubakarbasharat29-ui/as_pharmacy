@@ -12,10 +12,17 @@ if (empty($_SESSION['user_id'])) {
     respond(['success' => false, 'message' => 'Login required'], 401);
 }
 
+if (($_GET['debug'] ?? '') === '1') {
+    respond([
+        'getenv' => getenv('GEMINI_API_KEY') ? 'SET (' . strlen(getenv('GEMINI_API_KEY')) . ' chars)' : 'NOT SET',
+        'env_array' => isset($_ENV['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
+        'server_array' => isset($_SERVER['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
+    ]);
+}
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(['success' => false, 'message' => 'POST required'], 405);
 }
-
 // ── APNI GEMINI API KEY YAHAN PASTE KARO ──
 $geminiKey = getenv('GEMINI_API_KEY') ?: ($_ENV['GEMINI_API_KEY'] ?? ($_SERVER['GEMINI_API_KEY'] ?? ''));
 define('GEMINI_API_KEY', $geminiKey);
@@ -24,13 +31,6 @@ if (!GEMINI_API_KEY) {
     respond(['success' => false, 'message' => 'API key not configured on server'], 500);
 }
 define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . GEMINI_API_KEY);
-if (($_GET['debug'] ?? '') === '1') {
-    respond([
-        'getenv' => getenv('GEMINI_API_KEY') ? 'SET (' . strlen(getenv('GEMINI_API_KEY')) . ' chars)' : 'NOT SET',
-        'env_array' => isset($_ENV['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
-        'server_array' => isset($_SERVER['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
-    ]);
-}
 
 $body = getBody();
 $userMessage = trim($body['message'] ?? '');
