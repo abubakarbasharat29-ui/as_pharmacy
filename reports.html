@@ -69,6 +69,12 @@
            await Storage.init();
 const user = Storage.getCurrentUser();
 if (!user) { window.location.replace('index.html'); return; }
+window.addEventListener('pageshow', function(event) {
+    if (event.persisted) {
+        const u = Storage.getCurrentUser();
+        if (!u) window.location.replace('index.html');
+    }
+});
             await Components.renderSidebar('reports');
             await Components.renderTopbar('Analytics Reports');
             const sales = await Storage.fetch(DB.SALES);
