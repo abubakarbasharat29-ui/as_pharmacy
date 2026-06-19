@@ -25,7 +25,26 @@ switch ($action) {
         $stmt->execute([$email]);
         $user = $stmt->fetch();
 
-        if (!$user || $user['password'] !== $password) {
+        if (!$user) {
+            respond(['success' => false, 'message' => 'Invalid email or password']);
+        }
+
+        // ── Support both hashed and legacy plain-text passwords ──
+        $passwordMatches = false;
+        if (password_get_info($user['password'])['algo'] !== null) {
+            // Password is hashed - verify normally
+            $passwordMatches = password_verify($password, $user['password']);
+        } else {
+            // Legacy plain-text password - compare directly, then upgrade to hash
+            if ($user['password'] === $password) {
+                $passwordMatches = true;
+                $newHash = password_hash($password, PASSWORD_BCRYPT);
+                $upd = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
+                $upd->execute([$newHash, $user['id']]);
+            }
+        }
+
+        if (!$passwordMatches) {
             respond(['success' => false, 'message' => 'Invalid email or password']);
         }
 
@@ -57,8 +76,11 @@ switch ($action) {
             respond(['success' => false, 'message' => 'Email already registered']);
         }
 
+        // ── Hash the password before storing ──
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
         $stmt = $db->prepare("INSERT INTO users (name, email, password, phone, dob, role, joined) VALUES (?, ?, ?, ?, ?, 'staff', CURDATE())");
-        $stmt->execute([$name, $email, $password, $phone, $dob ?: null]);
+        $stmt->execute([$name, $email, $hashedPassword, $phone, $dob ?: null]);
 
         respond(['success' => true, 'message' => 'Account created successfully']);
         break;
@@ -112,9 +134,12 @@ switch ($action) {
 
         if (!$email || !$newPassword) respond(['success' => false, 'message' => 'Email and new password required'], 400);
 
+        // ── Hash the new password before storing ──
+        $hashedPassword = password_hash($newPassword, PASSWORD_BCRYPT);
+
         $db   = getDB();
         $stmt = $db->prepare("UPDATE users SET password = ? WHERE email = ?");
-        $stmt->execute([$newPassword, $email]);
+        $stmt->execute([$hashedPassword, $email]);
 
         if ($stmt->rowCount() > 0) {
             respond(['success' => true]);
