@@ -30,7 +30,7 @@ define('GEMINI_API_KEY', $geminiKey);
 if (!GEMINI_API_KEY) {
     respond(['success' => false, 'message' => 'API key not configured on server'], 500);
 }
-define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . GEMINI_API_KEY);
+define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent');
 
 $body = getBody();
 $userMessage = trim($body['message'] ?? '');
@@ -64,7 +64,10 @@ $payload = [
 $ch = curl_init(GEMINI_URL);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    'Content-Type: application/json',
+    'x-goog-api-key: ' . GEMINI_API_KEY
+]);
 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
