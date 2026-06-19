@@ -83,7 +83,7 @@
                 <label class="form-label">Full Name</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-user input-icon"></i>
-                    <input type="text" id="name" class="form-control" placeholder="John Doe" required>
+                    <input type="text" id="name" class="form-control" placeholder="John Doe" required maxlength="20">
                 </div>
             </div>
 
@@ -102,7 +102,7 @@
                     <label class="form-label">Phone Number</label>
                     <div class="input-wrapper">
                         <i class="fa-solid fa-phone input-icon"></i>
-                        <input type="tel" id="phone" class="form-control" placeholder="+92 300 1234567" required>
+                        <input type="tel" id="phone" class="form-control" placeholder="03001234567" required maxlength="11">
                     </div>
                 </div>
                 <div class="form-group" style="margin-bottom:0;">
@@ -271,11 +271,17 @@
             if (!/^[a-zA-Z][a-zA-Z0-9 ]*$/.test(name)) {
                 showError('Name cannot contain special characters like @, #, ! etc.'); return;
             }
+            if (name.length > 20) {
+                showError('Name cannot be more than 20 characters.'); return;
+            }
             if (RESERVED.includes(name.toLowerCase())) {
                 showError('"' + name + '" is a reserved name. Please use a different name.'); return;
             }
             if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
                 showError('Please enter a valid email address.'); return;
+            }
+            if (!/^[0-9]{11}$/.test(phone)) {
+                showError('Phone number must be exactly 11 digits (e.g. 03001234567).'); return;
             }
             if (!gender) { showError('Please select your gender.'); return; }
             if (!country) { showError('Please select your country.'); return; }
