@@ -17,7 +17,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // ── APNI GEMINI API KEY YAHAN PASTE KARO ──
-define('GEMINI_API_KEY', getenv('GEMINI_API_KEY') ?: 'your_key_here');
+$geminiKey = getenv('GEMINI_API_KEY') ?: ($_ENV['GEMINI_API_KEY'] ?? ($_SERVER['GEMINI_API_KEY'] ?? ''));
+define('GEMINI_API_KEY', $geminiKey);
+
+if (!GEMINI_API_KEY) {
+    respond(['success' => false, 'message' => 'API key not configured on server'], 500);
+}
 define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . GEMINI_API_KEY);
 
 $body = getBody();
