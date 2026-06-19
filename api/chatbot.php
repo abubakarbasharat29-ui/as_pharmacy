@@ -24,6 +24,13 @@ if (!GEMINI_API_KEY) {
     respond(['success' => false, 'message' => 'API key not configured on server'], 500);
 }
 define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=' . GEMINI_API_KEY);
+if (($_GET['debug'] ?? '') === '1') {
+    respond([
+        'getenv' => getenv('GEMINI_API_KEY') ? 'SET (' . strlen(getenv('GEMINI_API_KEY')) . ' chars)' : 'NOT SET',
+        'env_array' => isset($_ENV['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
+        'server_array' => isset($_SERVER['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
+    ]);
+}
 
 $body = getBody();
 $userMessage = trim($body['message'] ?? '');
