@@ -7,7 +7,7 @@
   style.textContent = `
     #aspharm-chat-btn {
       position: fixed;
-      bottom: 24px;
+      bottom: 110px;
       left: 24px;
       width: 62px;
       height: 62px;
@@ -46,7 +46,7 @@
     }
     #aspharm-chat-window {
       position: fixed;
-      bottom: 98px;
+      bottom: 184px;
       left: 24px;
       width: 350px;
       max-width: 90vw;
