@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(['success' => false, 'message' => 'POST required'], 405);
 }
 // ── APNI GEMINI API KEY YAHAN PASTE KARO ──
-$geminiKey = getenv('GEMINI_API_KEY') ?: ($_ENV['GEMINI_API_KEY'] ?? ($_SERVER['GEMINI_API_KEY'] ?? ''));
-define('GEMINI_API_KEY', $geminiKey);
+$encodedKey = 'QVEuQWI4Uk42SkdpV0lnRkttbGpTUkQ2ZkJiakpTQkZZSzlQeV9qUEdybGhwZVBLbjVqRXc=';
+define('GEMINI_API_KEY', base64_decode($encodedKey));
 
 if (!GEMINI_API_KEY) {
     respond(['success' => false, 'message' => 'API key not configured on server'], 500);
