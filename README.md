@@ -99,7 +99,7 @@ as_pharmacy/
 
 ### Deployment (Railway)
 
-This project includes a `Dockerfile` and `railway.toml` for one-click deployment on [Railway](https://railway.app):
+This project includes a `Dockerfile` and `railway.toml` for one-click deployment on Railway:
 
 1. Connect your GitHub repository to Railway
 2. Add the `GEMINI_API_KEY` environment variable in the service's Variables tab
