@@ -36,7 +36,7 @@ define('GEMINI_API_KEY', base64_decode($encodedKey));
 if (!GEMINI_API_KEY) {
     respond(['success' => false, 'message' => 'API key not configured on server'], 500);
 }
-define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent');
+define('GEMINI_URL', 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent');
 
 $body = getBody();
 $userMessage = trim($body['message'] ?? '');
