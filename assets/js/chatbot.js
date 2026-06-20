@@ -9,8 +9,8 @@
       position: fixed;
       bottom: 110px;
       left: 24px;
-      width: 62px;
-      height: 62px;
+      width: 46px;
+      height: 46px;
       border-radius: 50%;
       background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
       color: #fff;
@@ -28,8 +28,8 @@
       box-shadow: 0 8px 24px rgba(34, 197, 94, 0.6), 0 2px 8px rgba(0,0,0,0.35);
     }
     #aspharm-chat-btn svg {
-      width: 28px;
-      height: 28px;
+      width: 20px;
+      height: 20px;
     }
     #aspharm-chat-btn .aspharm-pulse {
       position: absolute;
@@ -46,7 +46,7 @@
     }
     #aspharm-chat-window {
       position: fixed;
-      bottom: 184px;
+      bottom: 168px;
       left: 24px;
       width: 350px;
       max-width: 90vw;
