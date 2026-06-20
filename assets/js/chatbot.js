@@ -8,46 +8,95 @@
     #aspharm-chat-btn {
       position: fixed;
       bottom: 24px;
-      right: 24px;
-      width: 60px;
-      height: 60px;
+      left: 24px;
+      width: 62px;
+      height: 62px;
       border-radius: 50%;
-      background: #16a34a;
+      background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
       color: #fff;
       border: none;
       cursor: pointer;
-      font-size: 26px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.45), 0 2px 6px rgba(0,0,0,0.3);
       z-index: 9999;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    #aspharm-chat-btn:hover {
+      transform: scale(1.08);
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.6), 0 2px 8px rgba(0,0,0,0.35);
+    }
+    #aspharm-chat-btn svg {
+      width: 28px;
+      height: 28px;
+    }
+    #aspharm-chat-btn .aspharm-pulse {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: #22c55e;
+      opacity: 0.5;
+      animation: aspharm-pulse-anim 2.2s ease-out infinite;
+      z-index: -1;
+    }
+    @keyframes aspharm-pulse-anim {
+      0% { transform: scale(1); opacity: 0.5; }
+      100% { transform: scale(1.6); opacity: 0; }
     }
     #aspharm-chat-window {
       position: fixed;
-      bottom: 96px;
-      right: 24px;
-      width: 340px;
+      bottom: 98px;
+      left: 24px;
+      width: 350px;
       max-width: 90vw;
-      height: 460px;
-      max-height: 70vh;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      height: 480px;
+      max-height: 72vh;
+      background: #0f172a;
+      border: 1px solid rgba(34, 197, 94, 0.25);
+      border-radius: 16px;
+      box-shadow: 0 12px 36px rgba(0,0,0,0.5);
       display: none;
       flex-direction: column;
       overflow: hidden;
       z-index: 9999;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Arial, sans-serif;
     }
     #aspharm-chat-header {
-      background: #16a34a;
+      background: linear-gradient(135deg, #16a34a 0%, #0f3d22 100%);
       color: #fff;
-      padding: 12px 16px;
-      font-weight: bold;
+      padding: 14px 16px;
+      font-weight: 600;
+      font-size: 15px;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(34, 197, 94, 0.3);
+    }
+    #aspharm-chat-header .aspharm-header-icon {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    #aspharm-chat-header .aspharm-header-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    #aspharm-chat-header-text {
+      flex: 1;
+      line-height: 1.2;
+    }
+    #aspharm-chat-header-text small {
+      display: block;
+      font-weight: 400;
+      font-size: 11px;
+      opacity: 0.8;
+      margin-top: 2px;
     }
     #aspharm-chat-close {
       cursor: pointer;
@@ -55,67 +104,104 @@
       background: none;
       border: none;
       color: #fff;
+      opacity: 0.8;
+      line-height: 1;
+      padding: 4px;
     }
+    #aspharm-chat-close:hover { opacity: 1; }
     #aspharm-chat-body {
       flex: 1;
-      padding: 12px;
+      padding: 14px;
       overflow-y: auto;
-      background: #f4f6f8;
+      background: #0b1220;
       font-size: 14px;
     }
+    #aspharm-chat-body::-webkit-scrollbar { width: 6px; }
+    #aspharm-chat-body::-webkit-scrollbar-thumb { background: rgba(34,197,94,0.3); border-radius: 6px; }
     .aspharm-msg {
       margin-bottom: 10px;
       max-width: 85%;
-      padding: 8px 12px;
-      border-radius: 10px;
-      line-height: 1.4;
+      padding: 9px 13px;
+      border-radius: 12px;
+      line-height: 1.45;
       white-space: pre-wrap;
     }
     .aspharm-msg.user {
-      background: #16a34a;
+      background: linear-gradient(135deg, #22c55e, #15803d);
       color: #fff;
       margin-left: auto;
-      border-bottom-right-radius: 2px;
+      border-bottom-right-radius: 3px;
     }
     .aspharm-msg.bot {
-      background: #e5e7eb;
-      color: #111;
+      background: #1e293b;
+      color: #e2e8f0;
       margin-right: auto;
-      border-bottom-left-radius: 2px;
+      border-bottom-left-radius: 3px;
+      border: 1px solid rgba(255,255,255,0.06);
     }
     #aspharm-chat-input-area {
       display: flex;
-      border-top: 1px solid #ddd;
+      border-top: 1px solid rgba(34, 197, 94, 0.2);
+      background: #0f172a;
+      padding: 10px;
+      gap: 8px;
     }
     #aspharm-chat-input {
       flex: 1;
-      border: none;
-      padding: 10px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 12px;
       font-size: 14px;
       outline: none;
+      border-radius: 10px;
     }
+    #aspharm-chat-input::placeholder { color: #64748b; }
+    #aspharm-chat-input:focus { border-color: #22c55e; }
     #aspharm-chat-send {
-      background: #16a34a;
+      background: linear-gradient(135deg, #22c55e, #15803d);
       color: #fff;
       border: none;
-      padding: 0 16px;
+      padding: 0 18px;
       cursor: pointer;
       font-size: 14px;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: opacity 0.2s;
     }
+    #aspharm-chat-send:hover { opacity: 0.9; }
+    #aspharm-chat-send:disabled { opacity: 0.5; cursor: not-allowed; }
   `;
   document.head.appendChild(style);
 
   // ── Inject HTML ────────────────────────────────────────────
   const btn = document.createElement('button');
   btn.id = 'aspharm-chat-btn';
-  btn.innerHTML = '💬';
+  btn.innerHTML = `
+    <span class="aspharm-pulse"></span>
+    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C6.48 2 2 5.94 2 10.8c0 2.7 1.4 5.1 3.6 6.7-.1.9-.5 2.4-1.5 3.8-.2.3 0 .7.4.6 2-.4 3.7-1.3 4.8-2 1 .3 2.1.4 3.2.4 5.52 0 10-3.94 10-8.8S17.52 2 12 2z" fill="white"/>
+      <circle cx="8.5" cy="10.8" r="1.2" fill="#15803d"/>
+      <circle cx="12" cy="10.8" r="1.2" fill="#15803d"/>
+      <circle cx="15.5" cy="10.8" r="1.2" fill="#15803d"/>
+    </svg>
+  `;
   document.body.appendChild(btn);
 
   const win = document.createElement('div');
   win.id = 'aspharm-chat-window';
   win.innerHTML = `
     <div id="aspharm-chat-header">
-      <span>Medicine & Health Assistant</span>
+      <div class="aspharm-header-icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L4 6v6c0 5 3.4 8.7 8 10 4.6-1.3 8-5 8-10V6l-8-4z" fill="white"/>
+          <path d="M12 7v6M9 10h6" stroke="#15803d" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div id="aspharm-chat-header-text">
+        Medicine &amp; Health Assistant
+        <small>AS Pharmacy • Always here to help</small>
+      </div>
       <button id="aspharm-chat-close">✕</button>
     </div>
     <div id="aspharm-chat-body"></div>
