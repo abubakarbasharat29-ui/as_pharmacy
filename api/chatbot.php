@@ -13,10 +13,16 @@ if (empty($_SESSION['user_id'])) {
 }
 
 if (($_GET['debug'] ?? '') === '1') {
+    $rawEnv = shell_exec('env 2>&1');
+    $geminiLines = array_filter(explode("\n", $rawEnv), function($line) {
+        return stripos($line, 'GEMINI') !== false;
+    });
     respond([
         'getenv' => getenv('GEMINI_API_KEY') ? 'SET (' . strlen(getenv('GEMINI_API_KEY')) . ' chars)' : 'NOT SET',
         'env_array' => isset($_ENV['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
         'server_array' => isset($_SERVER['GEMINI_API_KEY']) ? 'SET' : 'NOT SET',
+        'shell_exec_env_gemini_lines' => array_values($geminiLines),
+        'php_sapi' => php_sapi_name(),
     ]);
 }
 
